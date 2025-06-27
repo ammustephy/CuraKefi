@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   decoration: const InputDecoration(
                     hintText: 'Mobile number',
-                    prefixIcon: Icon(Icons.phone),
+                    prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
                   ),
                 ),
