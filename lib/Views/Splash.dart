@@ -1,0 +1,83 @@
+// lib/Views/SplashPage.dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+  @override
+  _SplashPageState createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
+  final storage = const FlutterSecureStorage();
+  late final AnimationController _ctrl;
+  late final Animation<double> _fadeAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 2))
+      ..forward();
+    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(_ctrl);
+
+    Timer(const Duration(seconds: 2), _checkLogin);
+  }
+
+  Future<void> _checkLogin() async {
+    final token = await storage.read(key: 'token');
+
+    // Redirect based solely on token presence
+    if (token != null && token.isNotEmpty) {
+      if (mounted) Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      if (mounted) Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: FadeTransition(
+        opacity: _fadeAnim,
+        child: const _SplashContent(),
+      ),
+    );
+  }
+}
+
+class _SplashContent extends StatelessWidget {
+  const _SplashContent();
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/images/logo-Kefi_Cura.png', width: 120, height: 120),
+            const SizedBox(height: 8),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Text('Kefi', style: TextStyle(fontSize: 22, color: Colors.blue.shade900)),
+              Text('Cura', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.orange.shade900)),
+            ]),
+            const SizedBox(height: 16),
+            Text(
+              'Hospital Management System',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, color: Colors.blue.shade900),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
