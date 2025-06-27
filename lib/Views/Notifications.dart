@@ -1,7 +1,8 @@
+// lib/Views/NotificationsPage.dart
 import 'package:cura_kefi/Views/Appointments.dart';
 import 'package:cura_kefi/Views/Home.dart';
-import 'package:flutter/material.dart';
 import 'package:cura_kefi/Views/Profile.dart';
+import 'package:flutter/material.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -11,28 +12,37 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  int _selectedIndex = 1; // Notifications tab index
+  int _idx = 1; // Set to 1 since this is Notifications page
 
-  void _onNavTap(int index) {
-    if (index == _selectedIndex) return;
+  void _onNav(int i) {
+    if (i == _idx) return; // Already on this page
 
-    setState(() => _selectedIndex = index);
-
-    // Navigate based on index
-    switch (index) {
+    switch (i) {
       case 0:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage())); // Replace with HomePage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
         break;
       case 1:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => NotificationsPage()));
+      // Already here, do nothing
         break;
       case 2:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AppointmentPage(selectedIndex: 1,)));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AppointmentPage(selectedIndex: 1)),
+        );
         break;
       case 3:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) =>  ProfilePage()),
+        );
         break;
     }
+    setState(() {
+      _idx = i;
+    });
   }
 
   @override
@@ -47,20 +57,41 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
         title: const Text('Notifications', style: TextStyle(color: Colors.black)),
       ),
-      body: const Center(child: Text('🎉 No new notifications!')), // Replace with your content
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue.shade900,
-        unselectedItemColor: Colors.black54,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: _onNavTap,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_active), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
+      body: const Center(child: Text('🎉 No new notifications!')),
+      extendBody: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: PhysicalShape(
+          elevation: 10,
+          color: Colors.white,
+          shadowColor: Colors.black38,
+          clipper: const ShapeBorderClipper(shape: StadiumBorder()),
+          child: Container(
+            height: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            decoration: const ShapeDecoration(
+              shape: StadiumBorder(),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(4, (i) {
+                const icons = [
+                  Icons.home_filled,
+                  Icons.notifications_active,
+                  Icons.calendar_today,
+                  Icons.person_outline,
+                ];
+                final active = _idx == i;
+                return IconButton(
+                  icon: Icon(icons[i], color: active ? Colors.black : Colors.grey),
+                  onPressed: () => _onNav(i),
+                );
+              }),
+            ),
+          ),
+        ),
       ),
     );
   }

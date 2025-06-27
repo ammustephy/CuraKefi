@@ -25,6 +25,7 @@ class AppointmentPage extends StatefulWidget {
 }
 
 class _AppointmentPageState extends State<AppointmentPage> {
+  int _idx = 2;
   int _selectedIndex = 2;
   int _selectedCategoryIndex = 1;
 
@@ -63,22 +64,35 @@ class _AppointmentPageState extends State<AppointmentPage> {
     );
   }
 
-  void _onNavTap(int index) {
-    setState(() => _selectedIndex = index);
-    switch (index) {
+  void _onNav(int i) {
+    if (i == _idx) return; // Already on this page
+
+    switch (i) {
       case 0:
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
         break;
       case 1:
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsPage()));
+      // Already here, do nothing
         break;
       case 2:
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AppointmentPage(selectedIndex: 1,)));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AppointmentPage(selectedIndex: 1)),
+        );
         break;
       case 3:
-        Navigator.push(context, MaterialPageRoute(builder: (_) =>  ProfilePage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) =>  ProfilePage()),
+        );
         break;
     }
+    setState(() {
+      _idx = i;
+    });
   }
 
   Widget _buildModeCard({
@@ -184,19 +198,39 @@ class _AppointmentPageState extends State<AppointmentPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue.shade900,
-        unselectedItemColor: Colors.black54,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: _onNavTap,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_active), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: PhysicalShape(
+          elevation: 10,
+          color: Colors.white,
+          shadowColor: Colors.black38,
+          clipper: const ShapeBorderClipper(shape: StadiumBorder()),
+          child: Container(
+            height: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            decoration: const ShapeDecoration(
+              shape: StadiumBorder(),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(4, (i) {
+                const icons = [
+                  Icons.home_filled,
+                  Icons.notifications_active,
+                  Icons.calendar_today,
+                  Icons.person_outline,
+                ];
+                final active = _idx == i;
+                return IconButton(
+                  icon: Icon(icons[i], color: active ? Colors.black : Colors.grey),
+                  onPressed: () => _onNav(i),
+                );
+              }),
+            ),
+          ),
+        ),
       ),
     );
   }

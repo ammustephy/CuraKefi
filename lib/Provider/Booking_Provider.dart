@@ -81,4 +81,5 @@ class BookingProvider with ChangeNotifier {
     _bookings.removeAt(index);
     notifyListeners();
   }
+
 }

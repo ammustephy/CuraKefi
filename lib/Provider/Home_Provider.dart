@@ -16,47 +16,47 @@ class HomeProvider with ChangeNotifier {
     Category(
         id: 'booking',
         name: 'Advance Appointment',
-        imageUrl: 'assets/images/booking1.png',
+        imageUrl: 'assets/images/Bookings.jpg',
         page: BookingPage(selectedIndex: 0,)),
     Category(
         id: 'appointments',
         name: 'My Appointments',
-        imageUrl: 'assets/images/appointment1.png',
+        imageUrl: 'assets/images/Appointments.jpg',
         page: AppointmentPage(selectedIndex: 1,)),
     Category(
-        id: 'appointments',
+        id: 'Medication',
         name: 'Active Medication',
-        imageUrl: 'assets/images/Active Medication.png',
+        imageUrl: 'assets/images/Medications.jpg',
         page: MedicationsPage(selectedIndex: 2,)),
     Category(
         id: 'medical',
         name: 'Medical Reports',
-        imageUrl: 'assets/images/medreport1.png',
+        imageUrl: 'assets/images/MedReports.jpg',
         page: MedReports(selectedIndex: 3,)),
     Category(
         id: 'lab',
         name: 'Lab Reports',
-        imageUrl: 'assets/images/labreport.png',
+        imageUrl: 'assets/images/LabRepts.jpg',
         page: LabReports(selectedIndex: 4,)),
     Category(
-        id: 'lab',
+        id: 'Radiology',
         name: 'Radiology Reports',
-        imageUrl: 'assets/images/Radiology Reports.png',
+        imageUrl: 'assets/images/RadiologyRepts.jpg',
         page: RadiologyPage(selectedIndex: 5,)),
     Category(
         id: 'prescriptions',
         name: 'Prescriptions',
-        imageUrl: 'assets/images/prescription.png',
+        imageUrl: 'assets/images/Prescriptionss.jpg',
         page: Prescriptions(selectedIndex: 6,)),
     Category(
-        id: 'lab',
+        id: 'Bills',
         name: 'Bill View',
-        imageUrl: 'assets/images/Bills.png',
+        imageUrl: 'assets/images/Billss.jpg',
         page: BillDetails(selectedIndex: 7,)),
     Category(
-        id: 'lab',
+        id: 'Discharge',
         name: 'Discharge Summary',
-        imageUrl: 'assets/images/Discharge Summery.png',
+        imageUrl: 'assets/images/Discharges.jpg',
         page: DischargeDetails(selectedIndex: 8,)),
   ];
 
