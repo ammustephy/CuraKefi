@@ -16,47 +16,47 @@ class HomeProvider with ChangeNotifier {
     Category(
         id: 'booking',
         name: 'Advance Appointment',
-        imageUrl: 'assets/images/Bookings.jpg',
+        imageUrl: 'assets/images/booking1.png',
         page: BookingPage(selectedIndex: 0,)),
     Category(
         id: 'appointments',
         name: 'My Appointments',
-        imageUrl: 'assets/images/Appointments.jpg',
+        imageUrl: 'assets/images/appointment1.png',
         page: AppointmentPage(selectedIndex: 1,)),
     Category(
         id: 'Medication',
         name: 'Active Medication',
-        imageUrl: 'assets/images/Medications.jpg',
+        imageUrl: 'assets/images/Active Medication.png',
         page: MedicationsPage(selectedIndex: 2,)),
     Category(
         id: 'medical',
         name: 'Medical Reports',
-        imageUrl: 'assets/images/MedReports.jpg',
+        imageUrl: 'assets/images/medreport1.png',
         page: MedReports(selectedIndex: 3,)),
     Category(
         id: 'lab',
         name: 'Lab Reports',
-        imageUrl: 'assets/images/LabRepts.jpg',
+        imageUrl: 'assets/images/labreport.png',
         page: LabReports(selectedIndex: 4,)),
     Category(
         id: 'Radiology',
         name: 'Radiology Reports',
-        imageUrl: 'assets/images/RadiologyRepts.jpg',
+        imageUrl: 'assets/images/Radiology Reports.png',
         page: RadiologyPage(selectedIndex: 5,)),
     Category(
         id: 'prescriptions',
         name: 'Prescriptions',
-        imageUrl: 'assets/images/Prescriptionss.jpg',
+        imageUrl: 'assets/images/prescription.png',
         page: Prescriptions(selectedIndex: 6,)),
     Category(
         id: 'Bills',
         name: 'Bill View',
-        imageUrl: 'assets/images/Billss.jpg',
+        imageUrl: 'assets/images/billings.jpg',
         page: BillDetails(selectedIndex: 7,)),
     Category(
         id: 'Discharge',
         name: 'Discharge Summary',
-        imageUrl: 'assets/images/Discharges.jpg',
+        imageUrl: 'assets/images/Discharge Summery.png',
         page: DischargeDetails(selectedIndex: 8,)),
   ];
 
@@ -69,23 +69,3 @@ class HomeProvider with ChangeNotifier {
 
 }
 
-// Department list
-  // final List<Departments> department = [
-  //   Departments(id: 'dentistry', title: 'Dentistry', iconAsset: 'assets/images/dentistry.jpg'),
-  //   Departments(id: 'cardio', title: 'Cardiology', iconAsset: 'assets/images/cardio2.jpg'),
-  //   Departments(id: 'psychiatry', title: 'Psychiatry', iconAsset: 'assets/images/Psychiatry.jpg'),
-  //   Departments(id: 'pediatrics', title: 'Pediatrics', iconAsset: 'assets/images/Pediatrics.jpg'),
-  //   Departments(id: 'gynaecology', title: 'Gynaecology', iconAsset: 'assets/images/Gynaecology.jpg'),
-  //   Departments(id: 'oncology', title: 'Oncology', iconAsset: 'assets/images/Oncology.png'),
-  //   Departments(id: 'urology', title: 'Urology', iconAsset: 'assets/images/Urology.jpg'),
-  //   Departments(id: 'general_surgery', title: 'General Surgery', iconAsset: 'assets/images/General Surgery1.png'),
-  //   Departments(id: 'orthopedics', title: 'Orthopedics', iconAsset: 'assets/images/Orthopedics.jpg'),
-  //   Departments(id: 'pulmonology', title: 'Pulmonology', iconAsset: 'assets/images/Pulmonology.jpg'),
-  //   Departments(id: 'dermatology', title: 'Dermatology', iconAsset: 'assets/images/Dermatology.jpeg'),
-  //   Departments(id: 'gastro', title: 'Gastroenterology', iconAsset: 'assets/images/Gastroenterology.jpg'),
-  //   Departments(id: 'neurology', title: 'Neurology', iconAsset: 'assets/images/Neurology.png'),
-  // ];
-
-  // Categories list
-
-// }

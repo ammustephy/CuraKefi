@@ -20,17 +20,17 @@ class RadiologyPage extends StatefulWidget {
 class _RadiologyPageState extends State<RadiologyPage> {
   int _selectedCategoryIndex = 5; // "Lab Reports" by default
 
-  final categories = [
-    'Advance Appointments',
-    'My Appointments',
-    'Active Medication',
-    'Medical Reports',
-    'Lab Reports',
-    'Radiology Reports',
-    'Prescriptions',
-    'Bill View',
-    'Discharge Summary',
-  ];
+  // final categories = [
+  //   'Advance Appointments',
+  //   'My Appointments',
+  //   'Active Medication',
+  //   'Medical Reports',
+  //   'Lab Reports',
+  //   'Radiology Reports',
+  //   'Prescriptions',
+  //   'Bill View',
+  //   'Discharge Summary',
+  // ];
 
   void _onCategoryTap(int idx) {
     setState(() => _selectedCategoryIndex = idx);
@@ -69,25 +69,25 @@ class _RadiologyPageState extends State<RadiologyPage> {
             // ✨ Category Chips Bar
             SizedBox(
               height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (_, i) {
-                  final isSelected = i == _selectedCategoryIndex;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: ChoiceChip(
-                      label: Text(categories[i]),
-                      selected: isSelected,
-                      onSelected: (_) => _onCategoryTap(i),
-                      selectedColor: Colors.blue.shade100,
-                      labelStyle: TextStyle(
-                        color: isSelected ? Colors.blue.shade900 : Colors.black,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              // child: ListView.builder(
+              //   scrollDirection: Axis.horizontal,
+              //   itemCount: categories.length,
+              //   itemBuilder: (_, i) {
+              //     final isSelected = i == _selectedCategoryIndex;
+              //     return Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 4),
+              //       child: ChoiceChip(
+              //         label: Text(categories[i]),
+              //         selected: isSelected,
+              //         onSelected: (_) => _onCategoryTap(i),
+              //         selectedColor: Colors.blue.shade100,
+              //         labelStyle: TextStyle(
+              //           color: isSelected ? Colors.blue.shade900 : Colors.black,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
             ),
             // const SizedBox(height: 20),
             // TODO: Add Lab Reports content below...

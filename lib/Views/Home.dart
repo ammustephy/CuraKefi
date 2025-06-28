@@ -1,11 +1,12 @@
 // lib/Views/HomePage.dart
-import 'dart:math' as math;
+
 import 'dart:ui';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:cura_kefi/Styles.dart';
+import 'package:cura_kefi/Provider/News_Provider.dart';
 import 'package:cura_kefi/Provider/Home_Provider.dart';
 import 'package:cura_kefi/Provider/Booking_Provider.dart';
 import 'package:cura_kefi/Provider/SwitchUser_Provider.dart';
@@ -13,16 +14,11 @@ import 'package:cura_kefi/Views/Notifications.dart';
 import 'package:cura_kefi/Views/Appointments.dart';
 import 'package:cura_kefi/Views/Profile.dart';
 import 'package:intl/intl.dart';
+import 'package:cura_kefi/Styles.dart';
 
-class _GlassBar extends StatefulWidget {
+class _GlassBar extends StatelessWidget {
   final Widget child;
   const _GlassBar({required this.child});
-
-  @override
-  State<_GlassBar> createState() => _GlassBarState();
-}
-
-class _GlassBarState extends State<_GlassBar> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -33,10 +29,9 @@ class _GlassBarState extends State<_GlassBar> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(30),
             border: Border.all(color: Colors.white.withOpacity(0.2)),
           ),
-          child: widget.child,
+          child: child,
         ),
       ),
     );
@@ -53,10 +48,19 @@ class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
   int _idx = 0, _catIdx = -1;
 
-  Future<void> _logout() async {
-    await storage.delete(key: 'token');
-    Navigator.pushReplacementNamed(context, '/login');
+  Future<void> _onRefresh() async {
+    await Provider.of<NewsProvider>(context, listen: false).fetchNews();
+    // Optionally reload other data
   }
+
+  void _switchAccount() => showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text('Switch Account'),
+      content: const Text('Feature not implemented yet.'),
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+    ),
+  );
 
   void _onNav(int i) {
     setState(() => _idx = i);
@@ -70,9 +74,7 @@ class _HomePageState extends State<HomePage> {
       case 3:
         Navigator.push(context, MaterialPageRoute(builder: (_) =>  ProfilePage()));
         break;
-      case 0:
       default:
-        break;
     }
   }
 
@@ -83,28 +85,26 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
     final homeProv = context.watch<HomeProvider>();
-    final userProv = context.watch<UserProvider>();
     final bookProv = context.watch<BookingProvider>();
+    final newsProv = context.watch<NewsProvider>();
 
     return Scaffold(
       extendBody: true,
-      body: Stack(children: [
-        Positioned(top: -w * 0.3, left: -w * 0.3, child: Styles.topWidget(w)),
-        Positioned(bottom: -w * 0.4, right: -w * 0.4, child: Styles.bottomWidget(w)),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 80),
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              const SliverToBoxAdapter(child: SizedBox(height: 40)),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _GlassBar(
-                    child: Row(
-                      children: [
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 80),
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(), // ensures pull-to-refresh always works :contentReference[oaicite:1]{index=1}
+              slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 40)),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _GlassBar(
+                      child: Row(children: [
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
@@ -120,118 +120,154 @@ class _HomePageState extends State<HomePage> {
                             onChanged: (v) => homeProv.search = v,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        if (userProv.accounts.length > 1)
-                          IconButton(onPressed: userProv.switchAccount, icon: const Icon(Icons.switch_account)),
-                      ],
+                        IconButton(
+                          icon: Icon(Icons.switch_account, size: 28, color: Colors.blue.shade900),
+                          tooltip: 'Switch Account',
+                          onPressed: _switchAccount,
+                        ),
+                      ]),
                     ),
                   ),
                 ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 20)),
-              SliverToBoxAdapter(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(
-                    'assets/images/pic1.jpg',
-                    height: 240,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              SliverToBoxAdapter(
-                child: bookProv.bookings.isEmpty
-                    ? const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text("No active appointments", style: TextStyle(fontSize: 16)),
-                )
-                    : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "Active Appointments",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                const SliverToBoxAdapter(child: SizedBox(height: 30)),
+
+                // 📢 News Carousel Slider
+                if (newsProv.news.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: CarouselSlider.builder(
+                      itemCount: newsProv.news.length,
+                      itemBuilder: (ctx, idx, realIdx) {
+                        final article = newsProv.news[idx];
+                        return SizedBox(
+                          width: MediaQuery.of(ctx).size.width,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              color: Colors.blue.shade200,
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(article.title,
+                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center),
+                                  const SizedBox(height: 8),
+                                  Text(article.date,
+                                      style: const TextStyle(fontSize: 14, color: Colors.black)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      options: CarouselOptions(
+                        height: 100,
+                        viewportFraction: 1.0,            // full screen width :contentReference[oaicite:1]{index=1}
+                        autoPlay: true,
+                        enlargeCenterPage: false,        // disable center enlargement if full width
+                        autoPlayInterval: const Duration(seconds: 4),
+                        padEnds: false,                  // optional: removes padding at edges :contentReference[oaicite:2]{index=2}
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    ...bookProv.bookings.mapIndexed((idx, b) {
-                      final first = idx == 0;
-                      return Card(
-                        color: first ? Colors.blue.shade50 : null,
-                        elevation: first ? 6 : 2,
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                        child: ListTile(
-                          title: Text(
-                            "${b.department} • ${b.slot} on ${DateFormat.yMMMEd().format(b.date)}",
-                            style: TextStyle(fontWeight: first ? FontWeight.bold : null),
-                          ),
-                          subtitle: Text(b.mode == AppointmentMode.online ? 'Online' : 'Offline'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => bookProv.deleteBookingAt(idx),
-                          ),
-                          tileColor: first ? Colors.lightBlue.withOpacity(0.1) : null,
-                        ),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                        (_, i) {
-                      final cat = homeProv.categories[i];
-                      final sel = i == _catIdx;
-                      return GestureDetector(
-                        onTap: () => _onCat(i, cat.page),
-                        child: Card(
-                          elevation: sel ? 8 : 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(color: sel ? Colors.blue : Colors.transparent, width: 2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(cat.imageUrl, width: 60, height: 60, fit: BoxFit.cover),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                cat.name,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(fontWeight: sel ? FontWeight.bold : null),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: homeProv.categories.length,
                   ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisExtent: 140,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+
+                if (newsProv.news.isNotEmpty) const SliverToBoxAdapter(child: SizedBox(height: 25)
+                ),
+
+                // Appointments Section
+                SliverToBoxAdapter(
+                  child: bookProv.bookings.isEmpty
+                      ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("No active appointments", style: TextStyle(fontSize: 16)),
+                  )
+                      : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text("Active Appointments",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(height: 8),
+                      ...bookProv.bookings.mapIndexed((idx, b) {
+                        final first = idx == 0;
+                        return Card(
+                          color: first ? Colors.blue.shade50 : null,
+                          elevation: first ? 6 : 2,
+                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          child: ListTile(
+                            title: Text(
+                              "${b.department} • ${b.slot} on ${DateFormat.yMMMEd().format(b.date)}",
+                              style: TextStyle(fontWeight: first ? FontWeight.bold : null),
+                            ),
+                            subtitle: Text(b.mode == AppointmentMode.online ? 'Online' : 'Offline'),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => bookProv.deleteBookingAt(idx),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ],
                   ),
                 ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-            ],
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+                // Categories Grid
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, mainAxisExtent: 140,
+                      crossAxisSpacing: 12, mainAxisSpacing: 12,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                          (_, i) {
+                        final cat = homeProv.categories[i];
+                        final selected = i == _catIdx;
+                        return GestureDetector(
+                          onTap: () => _onCat(i, cat.page),
+                          child: Card(
+                            elevation: selected ? 8 : 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+                                color: selected ? Colors.blue : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.asset(cat.imageUrl,
+                                      width: 60, height: 60, fit: BoxFit.cover),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  cat.name,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(fontWeight: selected ? FontWeight.bold : null),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      childCount: homeProv.categories.length,
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -239,16 +275,11 @@ class _HomePageState extends State<HomePage> {
           elevation: 10,
           color: Colors.white,
           shadowColor: Colors.black38,
-          clipper: const ShapeBorderClipper(
-            shape: StadiumBorder(),
-          ),
+          clipper: const ShapeBorderClipper(shape: StadiumBorder()),
           child: Container(
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(),
-              color: Colors.white,
-            ),
+            decoration: const ShapeDecoration(shape: StadiumBorder(), color: Colors.white),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(4, (i) {

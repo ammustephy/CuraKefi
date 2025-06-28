@@ -50,8 +50,8 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Positioned(top: -w*0.3, left: -w*0.3, child: Styles.topWidget(w)),
-          Positioned(bottom: -w*0.4, right: -w*0.4, child: Styles.bottomWidget(w)),
+          // Positioned(top: -w*0.3, left: -w*0.3, child: Styles.topWidget(w)),
+          // Positioned(bottom: -w*0.4, right: -w*0.4, child: Styles.bottomWidget(w)),
           FadeTransition(
             opacity: _fadeAnim,
             child: const _SplashContent(),
@@ -76,14 +76,14 @@ class _SplashContent extends StatelessWidget {
             Image.asset('assets/images/logo-Kefi_Cura.png', width: 120, height: 120),
             const SizedBox(height: 8),
             Row(mainAxisSize: MainAxisSize.min, children: [
-              Text('Kefi', style: TextStyle(fontSize: 22, color: Colors.black)),
-              Text('Cura', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
+              Text('Kefi', style: TextStyle(fontSize: 25, color: Colors.blue.shade900)),
+              Text('Cura', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.orange.shade900)),
             ]),
             const SizedBox(height: 16),
             Text(
               'Hospital Management System',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: TextStyle(fontSize: 18, color: Colors.blue.shade900),
             ),
           ],
         ),

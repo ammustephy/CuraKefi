@@ -21,17 +21,17 @@ class _MedicationsPageState extends State<MedicationsPage> {
 
   late int _selectedCategoryIndex;
 
-  final categories = [
-    'Advance Appointments',
-    'My Appointments',
-    'Active Medication',
-    'Medical Reports',
-    'Lab Reports',
-    'Radiology Reports',
-    'Prescriptions',
-    'Bill View',
-    'Discharge Summary',
-  ];
+  // final categories = [
+  //   'Advance Appointments',
+  //   'My Appointments',
+  //   'Active Medication',
+  //   'Medical Reports',
+  //   'Lab Reports',
+  //   'Radiology Reports',
+  //   'Prescriptions',
+  //   'Bill View',
+  //   'Discharge Summary',
+  // ];
 
   @override
   void initState() {
@@ -82,26 +82,26 @@ class _MedicationsPageState extends State<MedicationsPage> {
           // Horizontal ChoiceChips
           SizedBox(
             height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (_, i) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ChoiceChip(
-                    label: Text(categories[i]),
-                    selected: i == _selectedCategoryIndex,
-                    onSelected: (_) => _onCategoryTap(i),
-                    selectedColor: Colors.blue.shade100,
-                    labelStyle: TextStyle(
-                      color: i == _selectedCategoryIndex
-                          ? Colors.blue.shade900
-                          : Colors.black,
-                    ),
-                  ),
-                );
-              },
-            ),
+            // child: ListView.builder(
+            //   scrollDirection: Axis.horizontal,
+            //   itemCount: categories.length,
+            //   itemBuilder: (_, i) {
+            //     return Padding(
+            //       padding: const EdgeInsets.symmetric(horizontal: 4),
+            //       child: ChoiceChip(
+            //         label: Text(categories[i]),
+            //         selected: i == _selectedCategoryIndex,
+            //         onSelected: (_) => _onCategoryTap(i),
+            //         selectedColor: Colors.blue.shade100,
+            //         labelStyle: TextStyle(
+            //           color: i == _selectedCategoryIndex
+            //               ? Colors.blue.shade900
+            //               : Colors.black,
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
           ),
         ],
       ),

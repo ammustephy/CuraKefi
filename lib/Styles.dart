@@ -16,7 +16,7 @@ class Styles {
             end: Alignment.bottomCenter,
             colors: [
               Color(0x007CBFCF),
-              Color(0xFF4B8AE8),
+              Color(0xFF4B60E8),
             ],
           ),
         ),
@@ -34,8 +34,8 @@ class Styles {
           begin: Alignment(0.6, -1.1),
           end: Alignment(0.7, 0.8),
           colors: [
-            Color(0xFF4B8AE8),
-            Color(0x005CDBCF),
+            Color(0xFF4B77E8),
+            Color(0x007CBFCF),
           ],
         ),
       ),

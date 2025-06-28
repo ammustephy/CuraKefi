@@ -149,10 +149,10 @@ class _BookingPageState extends State<BookingPage> {
                     ElevatedButton(
                       onPressed: () {
                         booking.setMode(AppointmentMode.online);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => OnlineAppointmentPage()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (_) => OnlineAppointmentPage()),
+                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: booking.mode == AppointmentMode.online
@@ -166,8 +166,8 @@ class _BookingPageState extends State<BookingPage> {
                     ElevatedButton(
                       onPressed: () {
                         booking.setMode(AppointmentMode.offline);
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>OfflineAppointmentPage()),
-                        );
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>OfflineAppointmentPage()),
+                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:

@@ -15,4 +15,6 @@ class AppointmentProvider with ChangeNotifier {
     _current = AppointmentTab.offline;
     notifyListeners();
   }
+
+
 }

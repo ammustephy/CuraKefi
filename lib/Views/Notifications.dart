@@ -57,7 +57,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
         title: const Text('Notifications', style: TextStyle(color: Colors.black)),
       ),
-      body: const Center(child: Text('🎉 No new notifications!')),
+      body: const Center(child: Text('No new notifications!')),
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
