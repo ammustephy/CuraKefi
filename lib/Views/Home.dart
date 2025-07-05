@@ -1,6 +1,7 @@
 // lib/Views/HomePage.dart
 
 import 'dart:ui';
+import 'package:cura_kefi/Views/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
@@ -48,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
   int _idx = 0, _catIdx = -1;
 
+
   Future<void> _onRefresh() async {
     await Provider.of<NewsProvider>(context, listen: false).fetchNews();
     // Optionally reload other data
@@ -69,7 +71,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsPage()));
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const AppointmentPage(selectedIndex: 1)));
+        Navigator.push(context, MaterialPageRoute(builder: (_) =>  SettingsPage()));
         break;
       case 3:
         Navigator.push(context, MaterialPageRoute(builder: (_) =>  ProfilePage()));
@@ -90,6 +92,49 @@ class _HomePageState extends State<HomePage> {
     final newsProv = context.watch<NewsProvider>();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        toolbarHeight: 100,
+        backgroundColor: Colors.transparent, // important for gradient to show
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.blue.shade900,
+                Colors.blue.shade500,
+              ],
+            ),
+          ),
+        ),
+        title: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search doctor...',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                onChanged: (v) => homeProv.search = v,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.switch_account, size: 28, color: Colors.black),
+              tooltip: 'Switch Account',
+              onPressed: _switchAccount,
+            ),
+          ],
+        ),
+      ),
+
       extendBody: true,
       body: RefreshIndicator(
         onRefresh: _onRefresh,
@@ -99,37 +144,23 @@ class _HomePageState extends State<HomePage> {
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(), // ensures pull-to-refresh always works :contentReference[oaicite:1]{index=1}
               slivers: [
-                const SliverToBoxAdapter(child: SizedBox(height: 40)),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _GlassBar(
-                      child: Row(children: [
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search doctor...',
-                              prefixIcon: const Icon(Icons.search),
-                              filled: true,
-                              fillColor: Colors.white.withOpacity(0.3),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onChanged: (v) => homeProv.search = v,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.switch_account, size: 28, color: Colors.blue.shade900),
-                          tooltip: 'Switch Account',
-                          onPressed: _switchAccount,
-                        ),
-                      ]),
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 30)),
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                // SliverToBoxAdapter(
+                //   child: Container(
+                //     color: Colors.blue.shade200, // 💡 Set your desired background color here
+                //     padding: const EdgeInsets.symmetric(horizontal: 16),
+                //     child: _GlassBar(
+                //       child: Row(
+                //         children: [
+                //
+                //
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                //
+                // const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
                 // 📢 News Carousel Slider
                 if (newsProv.news.isNotEmpty)
@@ -161,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                       options: CarouselOptions(
-                        height: 100,
+                        height: 150,
                         viewportFraction: 1.0,            // full screen width :contentReference[oaicite:1]{index=1}
                         autoPlay: true,
                         enlargeCenterPage: false,        // disable center enlargement if full width
@@ -243,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.asset(cat.imageUrl,
-                                      width: 60, height: 60, fit: BoxFit.cover),
+                                      width: 50, height: 50, fit: BoxFit.cover),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
@@ -286,7 +317,8 @@ class _HomePageState extends State<HomePage> {
                 const icons = [
                   Icons.home_filled,
                   Icons.notifications_active,
-                  Icons.calendar_today,
+                  // Icons.calendar_today,
+                  Icons.settings,
                   Icons.person_outline,
                 ];
                 final active = _idx == i;

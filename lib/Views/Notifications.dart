@@ -2,6 +2,7 @@
 import 'package:cura_kefi/Views/Appointments.dart';
 import 'package:cura_kefi/Views/Home.dart';
 import 'package:cura_kefi/Views/Profile.dart';
+import 'package:cura_kefi/Views/Settings.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -12,37 +13,59 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  int _idx = 1; // Set to 1 since this is Notifications page
+  int _idx = 1; // Notifications tab
+
+  // Dummy notifications list
+  final List<Map<String, dynamic>> _notifications = [
+    {
+      'time': '07:00 AM',
+      'title': 'Take Amoxicillin',
+      'description': '500 mg – 1 pill',
+      'type': 'medication'
+    },
+    {
+      'time': '09:00 AM',
+      'title': 'Measure BP',
+      'description': 'Record your blood pressure',
+      'type': 'health'
+    },
+    {
+      'time': '12:00 PM',
+      'title': 'Take Metformin',
+      'description': '500 mg – 1 pill',
+      'type': 'medication'
+    },
+    {
+      'time': '03:00 PM',
+      'title': 'Blood Test Tomorrow',
+      'description': 'Fasting glucose test at 08:00 AM',
+      'type': 'lab'
+    },
+    {
+      'time': '08:00 PM',
+      'title': 'Doctor Appointment',
+      'description': 'Telemedicine with Dr. Smith at 08:30 PM',
+      'type': 'appointment'
+    },
+  ];
 
   void _onNav(int i) {
-    if (i == _idx) return; // Already on this page
-
+    if (i == _idx) return;
+    Widget next;
     switch (i) {
       case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomePage()),
-        );
-        break;
-      case 1:
-      // Already here, do nothing
+        next = const HomePage();
         break;
       case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const AppointmentPage(selectedIndex: 1)),
-        );
+        next = const SettingsPage();
         break;
       case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) =>  ProfilePage()),
-        );
+        next =  ProfilePage();
         break;
+      default:
+        return;
     }
-    setState(() {
-      _idx = i;
-    });
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => next));
   }
 
   @override
@@ -57,7 +80,49 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
         title: const Text('Notifications', style: TextStyle(color: Colors.black)),
       ),
-      body: const Center(child: Text('No new notifications!')),
+      body: _notifications.isEmpty
+          ? const Center(child: Text('No new notifications!'))
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _notifications.length,
+        itemBuilder: (ctx, i) {
+          final note = _notifications[i];
+          Icon leadingIcon;
+          switch (note['type']) {
+            case 'medication':
+              leadingIcon = const Icon(Icons.medical_services, color: Colors.red);
+              break;
+            case 'lab':
+              leadingIcon = const Icon(Icons.science, color: Colors.blue);
+              break;
+            case 'appointment':
+              leadingIcon = const Icon(Icons.schedule, color: Colors.green);
+              break;
+            default:
+              leadingIcon = const Icon(Icons.info_outline);
+          }
+          return Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            elevation: 1,
+            child: ListTile(
+              leading: leadingIcon,  // your icon widget goes here
+              title: Text(note['title']),
+              subtitle: Text(note['description']),
+              trailing: IconButton(
+                icon: const Icon(Icons.check_circle_outline, color: Colors.green),
+                onPressed: () {
+                  setState(() {
+                    _notifications.removeAt(i);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Marked "${note['title']}" done')),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
@@ -70,17 +135,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
           child: Container(
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            decoration: const ShapeDecoration(
-              shape: StadiumBorder(),
-              color: Colors.white,
-            ),
+            decoration: const ShapeDecoration(shape: StadiumBorder(), color: Colors.white),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(4, (i) {
                 const icons = [
                   Icons.home_filled,
                   Icons.notifications_active,
-                  Icons.calendar_today,
+                  Icons.settings,
                   Icons.person_outline,
                 ];
                 final active = _idx == i;

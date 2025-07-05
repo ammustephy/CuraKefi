@@ -9,34 +9,51 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController otpController = TextEditingController();
+  late TextEditingController nameController,
+      mobileController,
+      emailController,
+      dobController;
   String? selectedGender;
+  bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
     final provider = Provider.of<ProfileProvider>(context, listen: false);
-    nameController.text = provider.name;
-    mobileController.text = provider.mobile;
-    emailController.text = provider.email;
-    dobController.text = provider.dob;
+    nameController = TextEditingController(text: provider.name);
+    mobileController = TextEditingController(text: provider.mobile);
+    emailController = TextEditingController(text: provider.email);
+    dobController = TextEditingController(text: provider.dob);
     selectedGender = provider.gender;
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    mobileController.dispose();
+    emailController.dispose();
+    dobController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProfileProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         leading: BackButton(color: Colors.black),
         title: Text("Profile", style: TextStyle(color: Colors.black)),
+        actions: [
+          TextButton(
+            onPressed: _toggleEdit,
+            child: Text(
+              _isEditing ? 'Save' : 'Edit',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -44,7 +61,6 @@ class _ProfilePageState extends State<ProfilePage> {
           key: _formKey,
           child: ListView(
             children: [
-              SizedBox(height: 10),
               Center(
                 child: Stack(
                   children: [
@@ -53,80 +69,53 @@ class _ProfilePageState extends State<ProfilePage> {
                       backgroundColor: Colors.grey[300],
                       child: Icon(Icons.person, size: 60, color: Colors.white),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 4,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: 16,
-                        child: Icon(Icons.edit, size: 16, color: Colors.white),
+                    if (_isEditing)
+                      Positioned(
+                        bottom: 0,
+                        right: 4,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 16,
+                          child: Icon(Icons.edit, size: 16, color: Colors.white),
+                        ),
                       ),
-                    )
                   ],
                 ),
               ),
-              SizedBox(height: 30),
-              _buildTextField("-- Full Name --", nameController, (val) => provider.updateName(val),
-                  validator: (val) => val == null || val.isEmpty ? 'Enter full name' : null),
-              _buildTextField("-- Mobile number --", mobileController, (val) => provider.updateMobile(val),
-                  keyboardType: TextInputType.phone,
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return 'Enter mobile number';
-                    if (!RegExp(r'^[6-9]\d{9}$').hasMatch(val)) return 'Enter valid 10-digit mobile number';
-                    return null;
-                  }),
-              _buildTextField("-- Email id --", emailController, (val) => provider.updateEmail(val),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return 'Enter email';
-                    if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(val)) return 'Enter valid email';
-                    return null;
-                  }),
-              _buildDateField(context, dobController, provider),
-              _buildGenderDropdown(provider),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate() && selectedGender != null && dobController.text.isNotEmpty) {
-                    provider.saveProfile();
-                    _showSuccessDialog(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Please fill all fields correctly")),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text("Save", style: TextStyle(fontSize: 18, color: Colors.white)),
+              const SizedBox(height: 30),
+              _buildTextField(
+                hint: "Full Name",
+                controller: nameController,
+                onChanged: provider.updateName,
+                enabled: _isEditing,
+                validator: (val) => val == null || val.isEmpty ? 'Enter full name' : null,
               ),
-              // SizedBox(height: 20),
-              // _buildTextField("Enter OTP", otpController, (val) {},
-              //     keyboardType: TextInputType.number,
-              //     validator: (val) => val == null || val.length != 6 ? 'Enter 6-digit OTP' : null),
-              // SizedBox(height: 10),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     if (otpController.text == "123456") {
-              //       ScaffoldMessenger.of(context).showSnackBar(
-              //         SnackBar(content: Text("OTP Verified Successfully!")),
-              //       );
-              //     } else {
-              //       ScaffoldMessenger.of(context).showSnackBar(
-              //         SnackBar(content: Text("Invalid OTP!")),
-              //       );
-              //     }
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.blueGrey,
-              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              //     minimumSize: Size(double.infinity, 45),
-              //   ),
-              //   child: Text("Verify OTP", style: TextStyle(color: Colors.white)),
-              // ),
+              _buildTextField(
+                hint: "Mobile number",
+                controller: mobileController,
+                keyboardType: TextInputType.phone,
+                onChanged: provider.updateMobile,
+                enabled: _isEditing,
+                validator: (val) {
+                  if (val == null || val.isEmpty) return 'Enter mobile number';
+                  if (!RegExp(r'^[6-9]\d{9}$').hasMatch(val)) return 'Enter valid 10-digit mobile';
+                  return null;
+                },
+              ),
+              _buildTextField(
+                hint: "Email id",
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: provider.updateEmail,
+                enabled: _isEditing,
+                validator: (val) {
+                  if (val == null || val.isEmpty) return 'Enter email';
+                  if (!RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(val)) return 'Enter valid email';
+                  return null;
+                },
+              ),
+              _buildDateField(provider),
+              _buildGenderDropdown(provider),
             ],
           ),
         ),
@@ -134,15 +123,22 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller, Function(String) onChanged,
-      {TextInputType keyboardType = TextInputType.text, String? Function(String?)? validator}) {
+  Widget _buildTextField({
+    required String hint,
+    required TextEditingController controller,
+    required Function(String) onChanged,
+    required bool enabled,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
+        enabled: enabled,
         controller: controller,
-        onChanged: onChanged,
         keyboardType: keyboardType,
         validator: validator,
+        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hint,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -152,26 +148,29 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildDateField(BuildContext context, TextEditingController controller, ProfileProvider provider) {
+  Widget _buildDateField(ProfileProvider provider) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
-        controller: controller,
+        enabled: _isEditing,
+        controller: dobController,
         readOnly: true,
         validator: (val) => val == null || val.isEmpty ? 'Select date of birth' : null,
-        onTap: () async {
-          DateTime? picked = await showDatePicker(
+        onTap: _isEditing
+            ? () async {
+          final picked = await showDatePicker(
             context: context,
-            initialDate: DateTime(2000),
+            initialDate: DateTime.tryParse(provider.dob) ?? DateTime(2000),
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
           );
           if (picked != null) {
-            String formatted = "${picked.day}/${picked.month}/${picked.year}";
-            controller.text = formatted;
+            final formatted = "${picked.day}/${picked.month}/${picked.year}";
+            dobController.text = formatted;
             provider.updateDob(formatted);
           }
-        },
+        }
+            : null,
         decoration: InputDecoration(
           hintText: "Date of Birth",
           prefixIcon: Icon(Icons.calendar_today),
@@ -183,24 +182,27 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildGenderDropdown(ProfileProvider provider) {
+    const options = ['Male', 'Female', 'Other'];
+    final currentValue = options.contains(selectedGender) ? selectedGender : null;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: DropdownButtonFormField<String>(
-        value: ['Male', 'Female', 'Other'].contains(selectedGender) ? selectedGender : null,
-        items: ['Male', 'Female', 'Other'].map((gender) {
-          return DropdownMenuItem(
-            child: Text(gender),
+        value: currentValue,
+        items: options.map((gender) {
+          return DropdownMenuItem<String>(
             value: gender,
+            child: Text(gender),
           );
         }).toList(),
-        onChanged: (val) {
+        onChanged: _isEditing
+            ? (val) {
           if (val != null) {
-            setState(() {
-              selectedGender = val;
-            });
+            setState(() => selectedGender = val);
             provider.updateGender(val);
           }
-        },
+        }
+            : null,
         validator: (val) => val == null || val.isEmpty ? 'Select gender' : null,
         decoration: InputDecoration(
           hintText: "-- Gender --",
@@ -211,44 +213,19 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          contentPadding: EdgeInsets.all(24),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 60),
-              SizedBox(height: 20),
-              Text(
-                "Congratulations!",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Your profile has been saved successfully.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                ),
-                child: Text("OK", style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
+  void _toggleEdit() {
+    final provider = Provider.of<ProfileProvider>(context, listen: false);
+    if (_isEditing) {
+      // Save
+      if (_formKey.currentState?.validate() ?? false) {
+        provider.saveProfile();
+        setState(() => _isEditing = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile updated successfully")),
         );
-      },
-    );
+      }
+    } else {
+      setState(() => _isEditing = true);
+    }
   }
 }

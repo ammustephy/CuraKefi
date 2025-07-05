@@ -1,97 +1,121 @@
-import 'package:cura_kefi/Views/Prescriptions.dart';
 import 'package:flutter/material.dart';
-import 'package:cura_kefi/Views/Booking.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/Med_Reports.dart';
-import 'package:cura_kefi/Views/LabReports.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 
 class BillDetails extends StatefulWidget {
   final int selectedIndex;
-  const BillDetails({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const BillDetails({Key? key, required this.selectedIndex}) : super(key: key);
+
   @override
   State<BillDetails> createState() => _BillDetailsState();
 }
 
 class _BillDetailsState extends State<BillDetails> {
-  int _selectedCategoryIndex = 7;
-
-  // final categories = [
-  //   'Advance Appointments',
-  //   'My Appointments',
-  //   'Active Medication',
-  //   'Medical Reports',
-  //   'Lab Reports',
-  //   'Radiology Reports',
-  //   'Prescriptions',
-  //   'Bill View',
-  //   'Discharge Summary',
-  // ];
-
-  void _onCategoryTap(int idx) {
-    setState(() => _selectedCategoryIndex = idx);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) {
-        switch (idx) {
-          case 0: return  BookingPage(selectedIndex: 0,);
-          case 1: return  AppointmentPage(selectedIndex: 1,);
-          case 2: return  MedicationsPage(selectedIndex: 2,);
-          case 3: return  MedReports(selectedIndex: 3,);
-          case 4: return  LabReports(selectedIndex: 4,);
-          case 5: return  RadiologyPage(selectedIndex: 5,);
-          case 6: return  Prescriptions(selectedIndex: 6,);
-          case 7: return  BillDetails(selectedIndex: 7,);
-          case 8: return  DischargeDetails(selectedIndex: 8,);
-          default: return  BookingPage(selectedIndex: 0,);
-        }
-      }),
-    );
-  }
+  // Dummy billing data
+  final List<Map<String, dynamic>> _bills = [
+    {
+      'invoice': 'INV-2025-06-01',
+      'date': '2025-06-01',
+      'total': 150.75,
+      'items': [
+        {'name': 'Consultation Fee', 'amount': 50.00},
+        {'name': 'Blood Test', 'amount': 75.00},
+        {'name': 'X-Ray', 'amount': 25.75},
+      ],
+      'pdfUrl': 'https://example.com/bills/inv_june01_2025.pdf',
+    },
+    {
+      'invoice': 'INV-2025-05-15',
+      'date': '2025-05-15',
+      'total': 200.00,
+      'items': [
+        {'name': 'MRI Scan', 'amount': 150.00},
+        {'name': 'Medicine', 'amount': 50.00},
+      ],
+      'pdfUrl': 'https://example.com/bills/inv_may15_2025.pdf',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, elevation: 0,
+        title: const Text('Bill Details', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Bill Details', style: TextStyle(color: Colors.black)),
       ),
-      body: Padding(
+      body: _bills.isEmpty
+          ? const Center(child: Text('No billing records found.'))
+          : ListView.builder(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 40,
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: categories.length,
-              //   itemBuilder: (_, i) {
-              //     final isSelected = i == _selectedCategoryIndex;
-              //     return Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 4),
-              //       child: ChoiceChip(
-              //         label: Text(categories[i]),
-              //         selected: isSelected,
-              //         onSelected: (_) => _onCategoryTap(i),
-              //         selectedColor: Colors.blue.shade100,
-              //         labelStyle: TextStyle(
-              //           color: isSelected ? Colors.blue.shade900 : Colors.black,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
+        itemCount: _bills.length,
+        itemBuilder: (ctx, idx) {
+          final bill = _bills[idx];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: ExpansionTile(
+              key: PageStorageKey(bill['invoice']),
+              title: Text(bill['invoice'],
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text('Date: ${bill['date']}'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...List<Widget>.from(bill['items'].map((item) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(item['name']),
+                            Text('₹${item['amount'].toStringAsFixed(2)}'),
+                          ],
+                        ),
+                      ))),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Total:',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('₹${bill['total'].toStringAsFixed(2)}',
+                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ButtonBar(
+                  alignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(Icons.download_rounded),
+                      label: const Text('Download Bill'),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Downloading ${bill['invoice']}...')),
+                        );
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('View PDF'),
+                      onPressed: () {
+                        // TODO: Launch PDF viewer
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-            ],
-        ),
+          );
+        },
       ),
     );
   }

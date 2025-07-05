@@ -64,7 +64,7 @@ class _BookingPageState extends State<BookingPage> {
     return Consumer<BookingProvider>(
       builder: (context, booking, _) => Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.blue.shade200,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -116,11 +116,11 @@ class _BookingPageState extends State<BookingPage> {
                   if (val != null) booking.setDepartment(val);
                 },
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Dept: ${booking.selectedDepartment ?? '-'}',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
+              // const SizedBox(height: 8),
+              // Text(
+              //   'Dept: ${booking.selectedDepartment ?? '-'}',
+              //   style: TextStyle(color: Colors.grey[600]),
+              // ),
               const SizedBox(height: 20),
               const Text(
                 'Select Hour',
@@ -135,11 +135,11 @@ class _BookingPageState extends State<BookingPage> {
                   if (val != null) booking.setSlot(val);
                 },
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Slot: ${booking.selectedSlot ?? '-'}',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
+              // const SizedBox(height: 8),
+              // Text(
+              //   'Slot: ${booking.selectedSlot ?? '-'}',
+              //   style: TextStyle(color: Colors.grey[600]),
+              // ),
               const SizedBox(height: 20),
               if (booking.selectedDate != null &&
                   booking.selectedDepartment != null &&

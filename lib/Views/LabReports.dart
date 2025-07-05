@@ -1,98 +1,96 @@
 import 'package:flutter/material.dart';
-import 'package:cura_kefi/Views/Booking.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/Med_Reports.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
-import 'package:cura_kefi/Views/Prescriptions.dart';
-import 'package:cura_kefi/Views/Bills.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 
 class LabReports extends StatefulWidget {
   final int selectedIndex;
-  const LabReports({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const LabReports({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<LabReports> createState() => _LabReportsState();
 }
 
 class _LabReportsState extends State<LabReports> {
-  int _selectedCategoryIndex = 4; // Lab Reports tab by default
-
-  // final categories = [
-  //   'Advance Appointments',
-  //   'My Appointments',
-  //   'Active Medication',
-  //   'Medical Reports',
-  //   'Lab Reports',
-  //   'Radiology Reports',
-  //   'Prescriptions',
-  //   'Bill View',
-  //   'Discharge Summary',
-  // ];
-
-  void _onCategoryTap(int idx) {
-    setState(() => _selectedCategoryIndex = idx);
-    Navigator.push(context, MaterialPageRoute(builder: (_) {
-      switch (idx) {
-        case 0: return  BookingPage(selectedIndex: 0,);
-        case 1: return  AppointmentPage(selectedIndex: 1,);
-        case 2: return  MedicationsPage(selectedIndex: 2,);
-        case 3: return  MedReports(selectedIndex: 3,);
-        case 4: return  LabReports(selectedIndex: 4,);
-        case 5: return  RadiologyPage(selectedIndex: 5,);
-        case 6: return  Prescriptions(selectedIndex: 6,);
-        case 7: return  BillDetails(selectedIndex: 7,);
-        case 8: return  DischargeDetails(selectedIndex: 8,);
-        default: return  BookingPage(selectedIndex: 0,);
-      }
-    }));
-  }
+  // Example data for lab test reports
+  final List<Map<String, String>> _labReports = [
+    {
+      'title': 'Complete Blood Count (CBC)',
+      'date': '2025-06-25',
+      'summary': 'All parameters are within normal range.',
+      'pdfUrl': 'https://example.com/reports/cbc_june2025.pdf',
+    },
+    {
+      'title': 'Liver Function Test (LFT)',
+      'date': '2025-06-20',
+      'summary': 'Liver enzymes show mild elevation; follow-up recommended.',
+      'pdfUrl': 'https://example.com/reports/lft_june2025.pdf',
+    },
+    {
+      'title': 'Kidney Panel',
+      'date': '2025-06-15',
+      'summary': 'Renal function is normal.',
+      'pdfUrl': 'https://example.com/reports/kidney_june2025.pdf',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, elevation: 0,
+        title: const Text('Lab Reports', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Lab Reports', style: TextStyle(color: Colors.black)),
       ),
-      body: Padding(
+      body: _labReports.isEmpty
+          ? const Center(child: Text('No lab test reports available.'))
+          : ListView.builder(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 🟦 Category Chips bar
-            SizedBox(
-              height: 40,
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: categories.length,
-              //   itemBuilder: (_, i) {
-              //     final isSelected = i == _selectedCategoryIndex;
-              //     return Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 4),
-              //       child: ChoiceChip(
-              //         label: Text(categories[i]),
-              //         selected: isSelected,
-              //         onSelected: (_) => _onCategoryTap(i),
-              //         selectedColor: Colors.blue.shade100,
-              //         labelStyle: TextStyle(
-              //           color: isSelected ? Colors.blue.shade900 : Colors.black,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
+        itemCount: _labReports.length,
+        itemBuilder: (ctx, idx) {
+          final report = _labReports[idx];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8)),
+            child: ExpansionTile(
+              // Keys preserve expansion state when scrolling :contentReference[oaicite:0]{index=0}
+              key: PageStorageKey(report['title']),
+              title: Text(report['title']!,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(report['date']!),
+              childrenPadding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 8),
+              children: [
+                Text(report['summary']!),
+                const SizedBox(height: 8),
+                ButtonBar(
+                  alignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(Icons.download_rounded),
+                      label: const Text('Download PDF'),
+                      onPressed: () {
+                        // Use url_launcher to open PDF
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Downloading ${report['title']}...')),
+                        );
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('View Details'),
+                      onPressed: () {
+                        // Navigate to detailed report screen if needed
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-            // const SizedBox(height: 20),
-            // TODO: Add Lab Reports content here...
-          ],
-        ),
+          );
+        },
       ),
     );
   }

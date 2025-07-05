@@ -16,47 +16,47 @@ class HomeProvider with ChangeNotifier {
     Category(
         id: 'booking',
         name: 'Advance Appointment',
-        imageUrl: 'assets/images/booking1.png',
+        imageUrl: 'assets/images/Hbooking.png',
         page: BookingPage(selectedIndex: 0,)),
     Category(
         id: 'appointments',
         name: 'My Appointments',
-        imageUrl: 'assets/images/appointment1.png',
+        imageUrl: 'assets/images/HAppointment.png',
         page: AppointmentPage(selectedIndex: 1,)),
     Category(
         id: 'Medication',
         name: 'Active Medication',
-        imageUrl: 'assets/images/Active Medication.png',
+        imageUrl: 'assets/images/Hmedicine.png',
         page: MedicationsPage(selectedIndex: 2,)),
     Category(
         id: 'medical',
         name: 'Medical Reports',
-        imageUrl: 'assets/images/medreport1.png',
+        imageUrl: 'assets/images/HMedreport.png',
         page: MedReports(selectedIndex: 3,)),
     Category(
         id: 'lab',
         name: 'Lab Reports',
-        imageUrl: 'assets/images/labreport.png',
+        imageUrl: 'assets/images/Hlab.png',
         page: LabReports(selectedIndex: 4,)),
     Category(
         id: 'Radiology',
         name: 'Radiology Reports',
-        imageUrl: 'assets/images/Radiology Reports.png',
+        imageUrl: 'assets/images/HRadiology.png',
         page: RadiologyPage(selectedIndex: 5,)),
     Category(
         id: 'prescriptions',
         name: 'Prescriptions',
-        imageUrl: 'assets/images/prescription.png',
+        imageUrl: 'assets/images/Hprescription.png',
         page: Prescriptions(selectedIndex: 6,)),
     Category(
         id: 'Bills',
         name: 'Bill View',
-        imageUrl: 'assets/images/billings.jpg',
+        imageUrl: 'assets/images/Hbill.png',
         page: BillDetails(selectedIndex: 7,)),
     Category(
         id: 'Discharge',
         name: 'Discharge Summary',
-        imageUrl: 'assets/images/Discharge Summery.png',
+        imageUrl: 'assets/images/HDischarge.png',
         page: DischargeDetails(selectedIndex: 8,)),
   ];
 

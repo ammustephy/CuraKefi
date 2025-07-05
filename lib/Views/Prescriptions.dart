@@ -1,96 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:cura_kefi/Views/Booking.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/Med_Reports.dart';
-import 'package:cura_kefi/Views/LabReports.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
-import 'package:cura_kefi/Views/Bills.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 
 class Prescriptions extends StatefulWidget {
   final int selectedIndex;
-  const Prescriptions({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const Prescriptions({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<Prescriptions> createState() => _PrescriptionsState();
 }
 
 class _PrescriptionsState extends State<Prescriptions> {
-  int _selectedCategoryIndex = 6; // "Prescriptions" by default
-
-  // final categories = [
-  //   'Advance Appointments',
-  //   'My Appointments',
-  //   'Active Medication',
-  //   'Medical Reports',
-  //   'Lab Reports',
-  //   'Radiology Reports',
-  //   'Prescriptions',
-  //   'Bill View',
-  //   'Discharge Summary',
-  // ];
-
-  void _onCategoryTap(int idx) {
-    setState(() => _selectedCategoryIndex = idx);
-    Navigator.push(context, MaterialPageRoute(builder: (_) {
-      switch (idx) {
-        case 0: return  BookingPage(selectedIndex: 0,);
-        case 1: return  AppointmentPage(selectedIndex: 1,);
-        case 2: return  MedicationsPage(selectedIndex: 2,);
-        case 3: return  MedReports(selectedIndex: 3,);
-        case 4: return  LabReports(selectedIndex: 4,);
-        case 5: return  RadiologyPage(selectedIndex: 5,);
-        case 6: return  Prescriptions(selectedIndex: 6,);
-        case 7: return  BillDetails(selectedIndex: 7,);
-        case 8: return  DischargeDetails(selectedIndex: 8,);
-        default: return  BookingPage(selectedIndex: 0,);
-      }
-    }));
-  }
+  // Dummy prescription data
+  final List<Map<String, String>> _prescriptions = [
+    {
+      'title': 'Prescription – 2025‑06‑20',
+      'doctor': 'Dr. Smith',
+      'medication': 'Amoxicillin 500 mg',
+      'dosage': 'TID for 7 days',
+      'date': '2025‑06‑20',
+      'pdfUrl': 'https://example.com/prescriptions/amoxicillin_june2025.pdf',
+    },
+    {
+      'title': 'Prescription – 2025‑05‑15',
+      'doctor': 'Dr. Patel',
+      'medication': 'Ibuprofen 200 mg',
+      'dosage': 'PRN pain relief',
+      'date': '2025‑05‑15',
+      'pdfUrl': 'https://example.com/prescriptions/ibuprofen_may2025.pdf',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Prescriptions', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Prescriptions', style: TextStyle(color: Colors.black)),
       ),
-      body: Padding(
+      body: _prescriptions.isEmpty
+          ? const Center(child: Text('No prescriptions found.'))
+          : ListView.builder(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 40,
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: categories.length,
-              //   itemBuilder: (_, i) {
-              //     final isSelected = i == _selectedCategoryIndex;
-              //     return Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 4),
-              //       child: ChoiceChip(
-              //         label: Text(categories[i]),
-              //         selected: isSelected,
-              //         onSelected: (_) => _onCategoryTap(i),
-              //         selectedColor: Colors.blue.shade100,
-              //         labelStyle: TextStyle(
-              //           color: isSelected ? Colors.blue.shade900 : Colors.black,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
+        itemCount: _prescriptions.length,
+        itemBuilder: (ctx, idx) {
+          final p = _prescriptions[idx];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(p['title']!,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text('Prescribed by: ${p['doctor']}',
+                      style: const TextStyle(fontSize: 14)),
+                  const SizedBox(height: 4),
+                  Text('Medication: ${p['medication']}',
+                      style: const TextStyle(fontSize: 14)),
+                  const SizedBox(height: 4),
+                  Text('Dosage: ${p['dosage']}',
+                      style: const TextStyle(fontSize: 14)),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // TODO: use url_launcher to open PDF link
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Opening prescription: ${p['title']}')),
+                        );
+                      },
+                      icon: const Icon(Icons.picture_as_pdf,color: Colors.white,),
+                      label: const Text('View PDF',style: TextStyle(color: Colors.white),),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

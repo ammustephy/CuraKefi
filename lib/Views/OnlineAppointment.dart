@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:cura_kefi/Provider/Booking_Provider.dart';
 import 'package:cura_kefi/Views/ReAppointment.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OnlineAppointmentPage extends StatelessWidget {
   const OnlineAppointmentPage({super.key});
@@ -9,17 +9,17 @@ class OnlineAppointmentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prov = context.watch<BookingProvider>();
-    final list = prov.bookings;
+    final onlineList = prov.bookings.where((b) => b.mode == AppointmentMode.online).toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Online Appointments')),
-      body: list.isEmpty
+      body: onlineList.isEmpty
           ? const Center(child: Text('No online appointments.'))
           : ListView.builder(
         padding: const EdgeInsets.all(12),
-        itemCount: list.length,
+        itemCount: onlineList.length,
         itemBuilder: (_, i) {
-          final b = list[i];
+          final b = onlineList[i];
           final dateStr = MaterialLocalizations.of(context).formatFullDate(b.date);
 
           return Dismissible(
@@ -47,7 +47,10 @@ class OnlineAppointmentPage extends StatelessWidget {
                 ],
               ),
             ),
-            onDismissed: (_) => prov.deleteBookingAt(i),
+            onDismissed: (_) {
+              final originalIndex = prov.bookings.indexWhere((ap) => ap.id == b.id);
+              if (originalIndex >= 0) prov.deleteBookingAt(originalIndex);
+            },
             child: Card(
               margin: const EdgeInsets.symmetric(vertical: 8),
               elevation: 4,
@@ -72,7 +75,7 @@ class OnlineAppointmentPage extends StatelessWidget {
                   label: const Text('Reschedule'),
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ReAppointmentPage()),
+                    MaterialPageRoute(builder: (_) =>  const ReAppointmentPage()),
                   ),
                 ),
               ),

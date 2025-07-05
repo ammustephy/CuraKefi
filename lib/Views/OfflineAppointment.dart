@@ -9,17 +9,17 @@ class OfflineAppointmentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prov = context.watch<BookingProvider>();
-    final list = prov.bookings;
+    final offlineList = prov.bookings.where((b) => b.mode == AppointmentMode.offline).toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Offline Appointments')),
-      body: list.isEmpty
+      body: offlineList.isEmpty
           ? const Center(child: Text('No offline appointments.'))
           : ListView.builder(
         padding: const EdgeInsets.all(12),
-        itemCount: list.length,
+        itemCount: offlineList.length,
         itemBuilder: (_, i) {
-          final b = list[i];
+          final b = offlineList[i];
           final dateStr = MaterialLocalizations.of(context).formatFullDate(b.date);
 
           return Dismissible(
@@ -47,7 +47,10 @@ class OfflineAppointmentPage extends StatelessWidget {
                 ],
               ),
             ),
-            onDismissed: (_) => prov.deleteBookingAt(i),
+            onDismissed: (_) {
+              final originalIndex = prov.bookings.indexWhere((ap) => ap.id == b.id);
+              if (originalIndex >= 0) prov.deleteBookingAt(originalIndex);
+            },
             child: Card(
               margin: const EdgeInsets.symmetric(vertical: 8),
               elevation: 4,

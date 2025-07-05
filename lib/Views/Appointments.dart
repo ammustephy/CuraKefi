@@ -130,7 +130,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
     final nav = context.watch<AppointmentProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Appointments')),
+      appBar: AppBar(
+        // backgroundColor: Colors.blue.shade200,
+          title: const Text('Appointments')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
