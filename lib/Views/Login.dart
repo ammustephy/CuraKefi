@@ -1,10 +1,11 @@
-// lib/Views/Login.dart
 import 'dart:ui';
 import 'package:cura_kefi/Api_Services.dart';
 import 'package:cura_kefi/Provider/AuthProvider.dart';
+import 'package:cura_kefi/Views/ForgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:provider/provider.dart';
+import 'ForgotPassword.dart'; // import the new screen
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,19 +20,14 @@ class _LoginPageState extends State<LoginPage> {
   bool _isHidden = true;
 
   Future<void> _handleLogin() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
     try {
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: ${e.toString()}')),
-      );
+          SnackBar(content: Text('Login failed: ${e.toString()}')));
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
@@ -43,11 +39,10 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-            top: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
-          ),
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -88,15 +83,13 @@ class _LoginPageState extends State<LoginPage> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.3),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                            const BorderSide(color: Colors.grey, width: 1),
-                          ),
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide:
+                              const BorderSide(color: Colors.grey)),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                            const BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.blueAccent, width: 2)),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -112,20 +105,17 @@ class _LoginPageState extends State<LoginPage> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.3),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                            const BorderSide(color: Colors.grey, width: 1),
-                          ),
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide:
+                              const BorderSide(color: Colors.grey)),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                            const BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.blueAccent, width: 2)),
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              _isHidden ? Icons.visibility_off : Icons.visibility,
-                              color: Colors.black54,
-                            ),
+                            icon: Icon(_isHidden
+                                ? Icons.visibility_off
+                                : Icons.visibility),
                             onPressed: () =>
                                 setState(() => _isHidden = !_isHidden),
                           ),
@@ -137,9 +127,11 @@ class _LoginPageState extends State<LoginPage> {
                         child: InkWell(
                           onTap: isLoading
                               ? null
-                              : () => ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Forgot password not implemented')),
+                              : () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                const ForgotPasswordPage()),
                           ),
                           child: const Text(
                             'Forgot Password?',
@@ -159,11 +151,11 @@ class _LoginPageState extends State<LoginPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black87,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
+                                borderRadius: BorderRadius.circular(30)),
                           ),
                           child: isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                              color: Colors.white)
                               : const Text(
                             "Sign In",
                             style: TextStyle(color: Colors.white),
@@ -174,34 +166,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
-
-              // Grab logo & brand inside scrollable area
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/logo-Kefi_Cura.png',
-                    height: 50,
-                    width: 30,
-                  ),
+                  Image.asset('assets/images/logo-Kefi_Cura.png',
+                      height: 50, width: 30),
                   const SizedBox(width: 8),
-                  Text(
-                    'Kefi',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue.shade900,
-                    ),
-                  ),
-                  Text(
-                    'Cura',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.orange.shade900,
-                    ),
-                  ),
+                  Text('Kefi', style: TextStyle(fontSize: 18, color: Colors.blue.shade900)),
+                  Text('Cura',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange.shade900)),
                 ],
               ),
               const SizedBox(height: 24),
