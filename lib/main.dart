@@ -1,16 +1,9 @@
-
-
-
-
-
 import 'package:cura_kefi/Provider/Appointment_Provider.dart';
 import 'package:cura_kefi/Provider/AuthProvider.dart';
 import 'package:cura_kefi/Provider/Booking_Provider.dart';
 import 'package:cura_kefi/Provider/Home_Provider.dart';
 import 'package:cura_kefi/Provider/Login_Provider.dart';
 import 'package:cura_kefi/Provider/News_Provider.dart';
-import 'package:cura_kefi/Provider/Offline_Provider.dart';
-import 'package:cura_kefi/Provider/Online_Provider.dart';
 import 'package:cura_kefi/Provider/Profile_Provider.dart';
 import 'package:cura_kefi/Provider/ReBooking_Provider.dart';
 import 'package:cura_kefi/Provider/Splash_Provider.dart';

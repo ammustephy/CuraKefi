@@ -1,11 +1,3 @@
-import 'package:cura_kefi/Views/Booking.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/LabReports.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
-import 'package:cura_kefi/Views/Prescriptions.dart';
-import 'package:cura_kefi/Views/Bills.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 import 'package:flutter/material.dart';
 
 class MedReports extends StatefulWidget {

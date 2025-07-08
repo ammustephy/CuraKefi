@@ -1,11 +1,7 @@
 import 'dart:ui';
-import 'package:cura_kefi/Api_Services.dart';
-import 'package:cura_kefi/Provider/AuthProvider.dart';
 import 'package:cura_kefi/Views/ForgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import 'package:provider/provider.dart';
-import 'ForgotPassword.dart'; // import the new screen
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    // final auth = context.watch<AuthProvider>();
 
     return Scaffold(
       body: SafeArea(

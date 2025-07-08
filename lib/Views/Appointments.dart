@@ -1,14 +1,5 @@
-import 'package:cura_kefi/Views/Bills.dart';
-import 'package:cura_kefi/Views/Booking.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 import 'package:cura_kefi/Views/Home.dart';
-import 'package:cura_kefi/Views/LabReports.dart';
-import 'package:cura_kefi/Views/Med_Reports.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/Notifications.dart';
-import 'package:cura_kefi/Views/Prescriptions.dart';
 import 'package:cura_kefi/Views/Profile.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cura_kefi/Provider/Appointment_Provider.dart';
@@ -26,8 +17,8 @@ class AppointmentPage extends StatefulWidget {
 
 class _AppointmentPageState extends State<AppointmentPage> {
   int _idx = 2;
-  int _selectedIndex = 2;
-  int _selectedCategoryIndex = 1;
+  // int _selectedIndex = 2;
+  // int _selectedCategoryIndex = 1;
 
   // final categories = [
   //   'Advance Appointments',
@@ -41,28 +32,28 @@ class _AppointmentPageState extends State<AppointmentPage> {
   //   'Discharge Summary',
   // ];
 
-  void _onCategoryTap(int idx) {
-    setState(() => _selectedCategoryIndex = idx);
-    Widget nextPage;
-    switch (idx) {
-      case 0: nextPage = BookingPage(selectedIndex: 0);
-      case 1: nextPage = AppointmentPage(selectedIndex: 1);
-      case 2: nextPage = MedicationsPage(selectedIndex: 2);
-      case 3: nextPage = MedReports(selectedIndex: 3);
-      case 4: nextPage = LabReports(selectedIndex: 4);
-      case 5: nextPage = RadiologyPage(selectedIndex: 5);
-      case 6: nextPage = Prescriptions(selectedIndex: 6);
-      case 7: nextPage = BillDetails(selectedIndex: 7);
-      case 8: nextPage = DischargeDetails(selectedIndex: 8);
-      default: nextPage = BookingPage(selectedIndex: 0);
-    }
-    Navigator.push(context, MaterialPageRoute(builder: (_) => nextPage));
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => nextPage),
-    );
-  }
+  // void _onCategoryTap(int idx) {
+  //   setState(() => _selectedCategoryIndex = idx);
+  //   Widget nextPage;
+  //   switch (idx) {
+  //     case 0: nextPage = BookingPage(selectedIndex: 0);
+  //     case 1: nextPage = AppointmentPage(selectedIndex: 1);
+  //     case 2: nextPage = MedicationsPage(selectedIndex: 2);
+  //     case 3: nextPage = MedReports(selectedIndex: 3);
+  //     case 4: nextPage = LabReports(selectedIndex: 4);
+  //     case 5: nextPage = RadiologyPage(selectedIndex: 5);
+  //     case 6: nextPage = Prescriptions(selectedIndex: 6);
+  //     case 7: nextPage = BillDetails(selectedIndex: 7);
+  //     case 8: nextPage = DischargeDetails(selectedIndex: 8);
+  //     default: nextPage = BookingPage(selectedIndex: 0);
+  //   }
+  //   Navigator.push(context, MaterialPageRoute(builder: (_) => nextPage));
+  //
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (_) => nextPage),
+  //   );
+  // }
 
   void _onNav(int i) {
     if (i == _idx) return; // Already on this page

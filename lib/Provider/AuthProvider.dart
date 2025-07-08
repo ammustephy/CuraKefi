@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:cura_kefi/Views/Home.dart';
 import 'package:cura_kefi/Views/Splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 

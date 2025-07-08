@@ -1,5 +1,4 @@
 // lib/Views/NotificationsPage.dart
-import 'package:cura_kefi/Views/Appointments.dart';
 import 'package:cura_kefi/Views/Home.dart';
 import 'package:cura_kefi/Views/Profile.dart';
 import 'package:cura_kefi/Views/Settings.dart';

@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cura_kefi/Provider/Booking_Provider.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
-import 'package:cura_kefi/Views/Medications.dart';
-import 'package:cura_kefi/Views/Med_Reports.dart';
-import 'package:cura_kefi/Views/LabReports.dart';
-import 'package:cura_kefi/Views/Radiology.dart';
-import 'package:cura_kefi/Views/Prescriptions.dart';
-import 'package:cura_kefi/Views/Bills.dart';
-import 'package:cura_kefi/Views/Discharge.dart';
 import 'package:cura_kefi/Views/OnlineAppointment.dart';
 import 'package:cura_kefi/Views/OfflineAppointment.dart';
 
@@ -37,27 +29,27 @@ class _BookingPageState extends State<BookingPage> {
     'Bill View',
     'Discharge Summary',
   ];
-  int _selectedCategoryIndex = -1;
+  // int _selectedCategoryIndex = -1;
 
-  void _onCategoryTap(int idx) {
-    setState(() => _selectedCategoryIndex = idx);
-    Navigator.push(context, MaterialPageRoute(builder: (_) {
-      switch (idx) {
-        case 0: return  BookingPage(selectedIndex: 0,);
-        case 1: return  AppointmentPage(selectedIndex: 1,);
-        case 2: return  MedicationsPage(selectedIndex: 2,);
-        case 3: return  MedReports(selectedIndex: 3,);
-        case 4: return  LabReports(selectedIndex: 4,);
-        case 5: return  RadiologyPage(selectedIndex: 5,);
-        case 6: return  Prescriptions(selectedIndex: 6,);
-        case 7: return  BillDetails(selectedIndex: 7,);
-        case 8: return  DischargeDetails(selectedIndex: 8,);
-        default: return  BookingPage(selectedIndex: 0,);
-      }
-    }
-    )
-    );
-  }
+  // void _onCategoryTap(int idx) {
+  //   setState(() => _selectedCategoryIndex = idx);
+  //   Navigator.push(context, MaterialPageRoute(builder: (_) {
+  //     switch (idx) {
+  //       case 0: return  BookingPage(selectedIndex: 0,);
+  //       case 1: return  AppointmentPage(selectedIndex: 1,);
+  //       case 2: return  MedicationsPage(selectedIndex: 2,);
+  //       case 3: return  MedReports(selectedIndex: 3,);
+  //       case 4: return  LabReports(selectedIndex: 4,);
+  //       case 5: return  RadiologyPage(selectedIndex: 5,);
+  //       case 6: return  Prescriptions(selectedIndex: 6,);
+  //       case 7: return  BillDetails(selectedIndex: 7,);
+  //       case 8: return  DischargeDetails(selectedIndex: 8,);
+  //       default: return  BookingPage(selectedIndex: 0,);
+  //     }
+  //   }
+  //   )
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

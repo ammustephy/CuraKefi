@@ -10,34 +10,31 @@ import 'package:provider/provider.dart';
 import 'package:cura_kefi/Provider/News_Provider.dart';
 import 'package:cura_kefi/Provider/Home_Provider.dart';
 import 'package:cura_kefi/Provider/Booking_Provider.dart';
-import 'package:cura_kefi/Provider/SwitchUser_Provider.dart';
 import 'package:cura_kefi/Views/Notifications.dart';
-import 'package:cura_kefi/Views/Appointments.dart';
 import 'package:cura_kefi/Views/Profile.dart';
 import 'package:intl/intl.dart';
-import 'package:cura_kefi/Styles.dart';
 
-class _GlassBar extends StatelessWidget {
-  final Widget child;
-  const _GlassBar({required this.child});
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
+// class _GlassBar extends StatelessWidget {
+//   final Widget child;
+//   const _GlassBar({required this.child});
+//   @override
+//   Widget build(BuildContext context) {
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(30),
+//       child: BackdropFilter(
+//         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+//         child: Container(
+//           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+//           decoration: BoxDecoration(
+//             color: Colors.white.withOpacity(0.15),
+//             border: Border.all(color: Colors.white.withOpacity(0.2)),
+//           ),
+//           child: child,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

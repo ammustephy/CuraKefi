@@ -56,13 +56,13 @@ class _SettingsPageState extends State<SettingsPage> {
   void _applyThemeMode(String mode) {
     switch (mode) {
       case 'Dark':
-        AdaptiveTheme.of(context)?.setDark();
+        AdaptiveTheme.of(context).setDark();
         break;
       case 'System':
-        AdaptiveTheme.of(context)?.setSystem();
+        AdaptiveTheme.of(context).setSystem();
         break;
       default:
-        AdaptiveTheme.of(context)?.setLight();
+        AdaptiveTheme.of(context).setLight();
     }
   }
 
@@ -130,9 +130,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 setState(() => _darkMode = v);
                 _secure.write(key: 'darkMode', value: v.toString());
                 if (v) {
-                  AdaptiveTheme.of(context)?.setDark();
+                  AdaptiveTheme.of(context).setDark();
                 } else {
-                  AdaptiveTheme.of(context)?.setLight();
+                  AdaptiveTheme.of(context).setLight();
                 }
               },
             ),
